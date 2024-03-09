@@ -19,14 +19,13 @@ jobs:
           sudo apt-get update
           sudo apt-get -y install build-essential gcc g++ gcc-multilib g++-multilib wget zip tar
 
-          git clone https://github.com/greenheartgames/greenworks greenworks
+          git clone https://github.com/greenheartgames/greenworks greenworks --depth 1 --branch v0.15.0
 
           wget https://github.com/calendulish/Overlays/raw/c2639077207562550a55f49021c947bc519fc869/dev-util/steamworks-sdk/files/steamworks_sdk_158.zip
           unzip steamworks_sdk_158.zip -d greenworks/deps
           mv greenworks/deps/sdk greenworks/deps/steamworks_sdk
 
           cd greenworks
-          git checkout v0.15.0
 
           npm install nw-gyp nan
 
