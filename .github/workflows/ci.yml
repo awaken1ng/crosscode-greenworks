@@ -2,8 +2,8 @@ on:
   workflow_dispatch:
 
 jobs:
-  build-linux:
-    runs-on: ubuntu-22.04
+  build-macos:
+    runs-on: macos-12
     permissions:
       contents: write
     steps:
@@ -16,9 +16,6 @@ jobs:
           node-version: '18'
 
       - run: |
-          sudo apt-get update
-          sudo apt-get -y install build-essential gcc g++ gcc-multilib g++-multilib wget zip tar
-
           git clone https://github.com/greenheartgames/greenworks greenworks --depth 1 --branch v0.15.0
 
           wget https://github.com/calendulish/Overlays/raw/c2639077207562550a55f49021c947bc519fc869/dev-util/steamworks-sdk/files/steamworks_sdk_158.zip
@@ -29,29 +26,17 @@ jobs:
 
           npm install nw-gyp nan
 
-          # for some reason `nw-gyp configure` fails to correctly extract headers in Ubuntu container, do it manually
-          mkdir $HOME/.nw-gyp
-          wget https://node-webkit.s3.amazonaws.com/v0.63.1/nw-headers-v0.63.1.tar.gz
-          tar --extract --file nw-headers-v0.63.1.tar.gz --directory $HOME/.nw-gyp
-          mv $HOME/.nw-gyp/node $HOME/.nw-gyp/0.63.1
-          grep 'installVersion' node_modules/nw-gyp/package.json | grep --only-matching '[0-9]\+' > $HOME/.nw-gyp/0.63.1/installVersion
-
           mkdir --parents release/assets/modules/greenworks-nw-0.35
 
           npx nw-gyp configure --target=0.63.1 --arch=x64
           npx nw-gyp build --target=0.63.1 --arch=x64
-          mv lib release/assets/modules/greenworks-nw-0.35/linux64
-
-          npx nw-gyp configure --target=0.63.1 --arch=ia32
-          npx nw-gyp build --target=0.63.1 --arch=ia32
-          mv lib release/assets/modules/greenworks-nw-0.35/linux32
+          mv lib release/assets/modules/greenworks-nw-0.35/osx
 
           cd release
-          zip -r crosscode-v1.4.2-3-nwjs-v0.63.1-gw-v0.15.0-sw-v1.58.zip assets
+          zip -r crosscode-v1.4.2-3-nwjs-v0.63.1-gw-v0.15.0-sw-v1.58-darwin.zip assets
 
-      - uses: softprops/action-gh-release@v1
+
+      - uses: actions/upload-artifact@v4
         with:
-          files: |
-            greenworks/release/crosscode-v1.4.2-3-nwjs-v0.63.1-gw-v0.15.0-sw-v1.58.zip
-        env:
-          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          path: greenworks/release/crosscode-v1.4.2-3-nwjs-v0.63.1-gw-v0.15.0-sw-v1.58-darwin.zip
+
