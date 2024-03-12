@@ -28,7 +28,7 @@ jobs:
 
           npm install nw-gyp nan
 
-          mkdir --parents release/assets/modules/greenworks-nw-0.35
+          mkdir -p release/assets/modules/greenworks-nw-0.35
 
           npx nw-gyp configure --target=0.63.1 --arch=x64
           npx nw-gyp build --target=0.63.1 --arch=x64
