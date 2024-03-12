@@ -16,6 +16,8 @@ jobs:
           node-version: '18'
 
       - run: |
+          brew install wget
+
           git clone https://github.com/greenheartgames/greenworks greenworks --depth 1 --branch v0.15.0
 
           wget https://github.com/calendulish/Overlays/raw/c2639077207562550a55f49021c947bc519fc869/dev-util/steamworks-sdk/files/steamworks_sdk_158.zip
